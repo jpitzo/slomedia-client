@@ -1,3 +1,6 @@
-<video width="600" autoplay loop>
+<video width="100%" autoplay loop id="video_bg">
   <source ng-src="{{ videoSrc | trustUrl }}" type="video/mp4" />
 </video>
+<audio autoplay loop>
+  <source ng-src="{{ audioSrc | trustUrl }}" type="audio/mp3" />
+</audio>
