@@ -21,6 +21,11 @@ angular.module('slofilmsFeApp')
     var videoplayer = document.getElementsByTagName('video')[0];
     var audioplayer = document.getElementsByTagName('audio')[0];
 
+    if(media.length < 1){
+        // No vidz bruh bruh!
+        return;
+    }
+
     setPlayerSrc(media[0]);
     
     button.ondown(function(){
