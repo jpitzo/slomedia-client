@@ -9,7 +9,7 @@
  */
 angular.module('slofilmsFeApp')
   .factory('socket', function () {
-    var socket = io.connect('raspberrypi:3000');
+    var socket = io.connect('sloserver.net:3000');
 
     return {
       on: function(eventName, callback){
