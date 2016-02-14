@@ -16,7 +16,7 @@ angular.module('slofilmsFeApp')
     var audioIndex = 0;
     $scope.oos = false;
 
-    var playerSrcPrefix = "http://raspberrypi:3000/media/";
+    var playerSrcPrefix = "http://sloserver.net:3000/media/";
     
     var videoplayer = document.getElementsByTagName('video')[0];
     var audioplayer = document.getElementsByTagName('audio')[0];
