@@ -28,6 +28,7 @@ angular.module('slofilmsFeApp')
 
     setPlayerSrc(media[0]);
     
+    
     button.ondown(function(){
       if ($scope.oos === false) {
         $scope.demux();
@@ -65,9 +66,13 @@ angular.module('slofilmsFeApp')
       
     });
     mastersocket.on('sync', function(data){
-      console.log('syncing');
       socket.emit('sync');
       videoIndex = 0;
+      audioIndex = 0;
+      $scope.$apply(function(){
+        $scope.oos = false;
+        $('body').removeClass('oos');
+      });
       reload(true);
     });
     
@@ -75,6 +80,11 @@ angular.module('slofilmsFeApp')
       socket.emit('sync');
       videoIndex = 0;
       audioIndex = 0;
+      console.log('here');
+      $scope.$apply(function(){
+        $scope.oos = false;
+        $('body').removeClass('oos');
+      });
       reload(true);
     }
     
