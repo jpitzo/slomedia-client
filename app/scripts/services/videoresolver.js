@@ -11,7 +11,7 @@ angular.module('slofilmsFeApp')
   .factory('videoResolver', function ($q, $http) {
     var deferred = $q.defer()
     
-    $http.get('http://sloserver.net:3000/media/')
+    $http.get('http://sloserver.net:3000/')
     .then(function(resp){
       deferred.resolve(resp.data);
     })
