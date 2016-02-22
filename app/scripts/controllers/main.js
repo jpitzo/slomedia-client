@@ -46,7 +46,7 @@ angular.module('slofilmsFeApp')
           $scope.remux();
         }
         $scope.oos = false;
-        $('.wrap').removeClass('oos');
+        setUiOOS(false);
       });
     });
 
@@ -73,7 +73,7 @@ angular.module('slofilmsFeApp')
       audioIndex = 0;
       $scope.$apply(function(){
         $scope.oos = false;
-        $('.wrap').removeClass('oos');
+        setUiOOS(false);
       });
       reload(true);
     });
@@ -85,7 +85,7 @@ angular.module('slofilmsFeApp')
       console.log('here');
       $scope.$apply(function(){
         $scope.oos = false;
-        $('.wrap').removeClass('oos');
+        setUiOOS(false);
       });
       reload(true);
     }
@@ -95,7 +95,7 @@ angular.module('slofilmsFeApp')
       $scope.randomizeAudio();
       $scope.$apply(function(){
         $scope.oos = true;
-        $('.wrap').addClass('oos');
+        setUiOOS(true);
       });
     }
     
@@ -104,13 +104,14 @@ angular.module('slofilmsFeApp')
       var randomNumber;
       
       for (var i = 0; i < media.length; i++) {
-        if (i !== audioIndex) {
+        if (i !== audioIndex && i !== videoIndex) {
             audios.push(i);
         }
       }
-      
-      randomNumber = Math.floor(Math.random() * (audios.length - 1));
-      audioIndex = randomNumber;
+
+      randomNumber = Math.floor(Math.random() * ((audios.length-1) - 0 + 1)) + 0;
+      console.log('random: ' + randomNumber);
+      audioIndex = audios[randomNumber];
       reloadAudio();
     }
     
@@ -217,5 +218,16 @@ angular.module('slofilmsFeApp')
     function setPlayerTime(time){
       videoplayer.currentTime = time;
       audioplayer.currentTime = time;
+    }
+    
+    function setUiOOS(oos) {
+        if (oos === true) {
+          $('.wrap').addClass('oos');
+          $('.oostext').show();
+        }
+        else{
+          $('.wrap').removeClass('oos');
+          $('.oostext').hide();
+        }
     }
   }]);

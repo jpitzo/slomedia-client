@@ -122,6 +122,33 @@ body {
     }  
 }
 
+@keyframes oostext {
+    0% {
+        content: "/ /";
+    } 33% {
+      content: "|-/";
+    } 66% {
+      content: "\\ \\";
+    } 100% {
+      content: "/-/";
+    }
+}
+
 .oos{
   -webkit-animation: gs 6s;
+}
+
+.oostext{
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+  font-size: 50px;
+  font-family: monospace;
+  &:after {
+    animation: oostext 2s linear infinite alternate;
+    display: block;
+    content: "/";
+    font-size: 80px;
+  }
 }
