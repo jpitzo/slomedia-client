@@ -8,8 +8,8 @@
  * Factory in the slofilmsFeApp.
  */
 angular.module('slofilmsFeApp')
-  .factory('socket', function () {
-    var socket = io.connect('sloserver.net:3000');
+  .factory('socket', ['constants', function (constants) {
+    var socket = io.connect(constants.wsserver);
 
     return {
       on: function(eventName, callback){
@@ -19,4 +19,4 @@ angular.module('slofilmsFeApp')
         socket.emit(eventName, data);
       }
     };
-  });
+  }]);

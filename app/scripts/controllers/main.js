@@ -8,15 +8,15 @@
  * Controller of the slofilmsFeApp
  */
 angular.module('slofilmsFeApp')
-  .controller('MainCtrl', ['$scope','socket','mastersocket', '$http', 'videos', 'button',
-                           function ($scope, socket, mastersocket, $http, media, button) {
+  .controller('MainCtrl', ['$scope','socket','mastersocket', '$http', 'videos', 'button', 'constants',
+                           function ($scope, socket, mastersocket, $http, media, button, constants) {
     $scope.time = 0;
     var syncBusy = false;
     var videoIndex = 0;
     var audioIndex = 0;
     $scope.oos = false;
 
-    var playerSrcPrefix = "http://sloserver.net:3000/";
+    var playerSrcPrefix = constants.httpserver;
     
     var videoplayer = document.getElementsByTagName('video')[0];
     var audioplayer = document.getElementsByTagName('audio')[0];
@@ -31,12 +31,14 @@ angular.module('slofilmsFeApp')
     
     button.ondown(function(){
       if ($scope.oos === false) {
+        // We're demuxing, so split audio and video
         $scope.demux();
       }
-      $scope.$apply(function(){
-        $scope.oos = true;
-        $('body').addClass('oos');
-      });
+      else{
+        // We're already demuxed, so change audio
+        $scope.randomizeAudio();
+        
+      }
     },
     function(){
       $scope.$apply(function(){
@@ -44,7 +46,7 @@ angular.module('slofilmsFeApp')
           $scope.remux();
         }
         $scope.oos = false;
-        $('body').removeClass('oos');
+        $('.wrap').removeClass('oos');
       });
     });
 
@@ -71,7 +73,7 @@ angular.module('slofilmsFeApp')
       audioIndex = 0;
       $scope.$apply(function(){
         $scope.oos = false;
-        $('body').removeClass('oos');
+        $('.wrap').removeClass('oos');
       });
       reload(true);
     });
@@ -83,47 +85,73 @@ angular.module('slofilmsFeApp')
       console.log('here');
       $scope.$apply(function(){
         $scope.oos = false;
-        $('body').removeClass('oos');
+        $('.wrap').removeClass('oos');
       });
       reload(true);
     }
     
     $scope.demux = function(){
-      audioIndex = audioIndex + 1;
-      if (audioIndex >= media.length) {
-        audioIndex = 0;
+      $http.get(constants.httpserver + 'pulse/start/');
+      $scope.randomizeAudio();
+      $scope.$apply(function(){
+        $scope.oos = true;
+        $('.wrap').addClass('oos');
+      });
+    }
+    
+    $scope.randomizeAudio = function(){
+      var audios = [];
+      var randomNumber;
+      
+      for (var i = 0; i < media.length; i++) {
+        if (i !== audioIndex) {
+            audios.push(i);
+        }
       }
+      
+      randomNumber = Math.floor(Math.random() * (audios.length - 1));
+      audioIndex = randomNumber;
       reloadAudio();
     }
     
     $scope.remux = function(){
+      $http.get(constants.httpserver + 'pulse/stop/');
       audioIndex = videoIndex;
       reloadAudio();
     }
     
     $scope.next = function(){
-      videoIndex++
-      audioIndex++
+      videoIndex++;
       if (videoIndex >= media.length) {
         videoIndex = 0;
       }
-      if (audioIndex >= media.length) {
-        audioIndex = 0;
+      
+      if ($scope.oos === false) {
+        audioIndex++;
+        if (audioIndex >= media.length) {
+          audioIndex = 0;
+        }
+        reloadAudio();
       }
-      reloadAudio();
+      
       reloadVideo();
     }
     
     $scope.previous = function(){
       videoIndex--;
-      audioIndex--;
+      
       if (videoIndex < 0) {
         videoIndex = media.length -1;
       }
-      if (audioIndex < 0) {
-        audioIndex = media.length -1;
+      
+      if ($scope.oos === false) {
+        audioIndex--;
+        if (audioIndex < 0) {
+          audioIndex = media.length -1;
+        }
+        reloadAudio();
       }
-      reloadAudio();
+      
       reloadVideo();
     }
     

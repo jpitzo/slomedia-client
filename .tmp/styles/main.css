@@ -8826,9 +8826,21 @@ body {
   background-color: #3B4E46;
 }
 
-/* line 114, ../../app/styles/main.scss */
+@keyframes gs {
+  0% {
+    opacity: 1;
+    -webkit-filter: grayscale(100%);
+  }
+  50% {
+    -webkit-filter: grayscale(60%);
+  }
+  100% {
+    -webkit-filter: grayscale(0%);
+  }
+}
+/* line 125, ../../app/styles/main.scss */
 .oos {
-  -webkit-filter: blur(4px) grayscale(60%);
+  -webkit-animation: gs 6s;
 }
 
 /*# sourceMappingURL=main.css.map */

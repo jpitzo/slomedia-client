@@ -26,7 +26,7 @@ angular.module('slofilmsFeApp')
                 doubleClick = 0;
                 doubleClickEvent = null;
                 onSingle();
-              }, 250);
+              }, 450);
             } 
         });
     }

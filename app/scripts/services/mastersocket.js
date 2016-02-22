@@ -8,8 +8,8 @@
  * Factory in the slofilmsFeApp.
  */
 angular.module('slofilmsFeApp')
-  .factory('mastersocket', function () {
-    var socket = io.connect('raspberrypi_sync:3001');
+  .factory('mastersocket', ['constants', function (constants) {
+    var socket = io.connect(constants.wssync);
 
     return {
       on: function(eventName, callback){
@@ -19,4 +19,4 @@ angular.module('slofilmsFeApp')
         socket.emit(eventName, data);
       }
     };
-  });
+  }]);
