@@ -28,7 +28,6 @@ angular.module('slofilmsFeApp')
 
     setPlayerSrc(media[0]);
     
-    
     button.ondown(function(){
       if ($scope.oos === false) {
         // We're demuxing, so split audio and video
@@ -67,7 +66,7 @@ angular.module('slofilmsFeApp')
       }
       
     });
-    mastersocket.on('sync', function(data){
+    mastersocket.on('keypress', function(data){
       socket.emit('sync');
       videoIndex = 0;
       audioIndex = 0;
@@ -76,10 +75,15 @@ angular.module('slofilmsFeApp')
         setUiOOS(false);
       });
       reload(true);
+      $('body').addClass('sync');
+      setTimeout(function(){
+        $('body').removeClass('sync');
+      }, 7000);
     });
     
     $scope.sync = function(){
-      socket.emit('sync');
+      // Don't send this for now
+      //socket.emit('sync');
       videoIndex = 0;
       audioIndex = 0;
       console.log('here');
@@ -110,7 +114,6 @@ angular.module('slofilmsFeApp')
       }
 
       randomNumber = Math.floor(Math.random() * ((audios.length-1) - 0 + 1)) + 0;
-      console.log('random: ' + randomNumber);
       audioIndex = audios[randomNumber];
       reloadAudio();
     }

@@ -152,3 +152,20 @@ body {
     font-size: 80px;
   }
 }
+
+@keyframes sync {
+    0% {
+      opacity: 0;
+      -webkit-filter: hue-rotate(90deg) saturate(0.4);
+    } 20% {
+      opacity: 0;
+      -webkit-filter: hue-rotate(90deg) saturate(0.4);
+    } 100% {
+      opacity: 1;
+      -webkit-filter: hue-rotate(0deg) saturate(1);
+    }
+}
+
+.sync{
+  -webkit-animation: sync cubic-bezier(0.5, 0.2, 0.3, 1.0) 4s;
+}
