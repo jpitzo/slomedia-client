@@ -4,4 +4,8 @@
 <audio autoplay loop>
   <source ng-src="{{ audioSrc | trustUrl }}" type="audio/mp3" />
 </audio>
-<p class="oostext" ng-show="oos"></p>
+<div class="vignette" ng-show="oos"></div>
+<div id="dislocateIcon" ng-show="oos">
+    <div id="outerRing"></div>
+    <div id="innerCircle"></div>
+</div>

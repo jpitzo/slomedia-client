@@ -8893,4 +8893,77 @@ body {
   -webkit-animation: sync cubic-bezier(0.5, 0.2, 0.3, 1) 4s;
 }
 
+/* line 173, ../../app/styles/main.scss */
+.vignette {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  z-index: 0;
+}
+
+/* line 181, ../../app/styles/main.scss */
+.vignette:after {
+  box-shadow: inset 0 0 40em black;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  content: "";
+  -webkit-animation: fade .5s ease-out;
+  -webkit-animation-iteration-count: 1;
+  animation: fade .5s ease-out;
+  animation-iteration-count: 1;
+}
+
+/* Override container css for now */
+/* line 199, ../../app/styles/main.scss */
+.container {
+  position: absolute;
+  height: 100%;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* line 208, ../../app/styles/main.scss */
+.view {
+  height: 100%;
+  width: 100%;
+}
+
+/* line 214, ../../app/styles/main.scss */
+#innerCircle {
+  position: fixed;
+  z-index: 999;
+  right: 23px;
+  bottom: 23px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 12px;
+  -webkit-animation: pulsate 3s ease-out;
+  -webkit-animation-iteration-count: infinite;
+  animation: pulsate 3s ease-out;
+  animation-iteration-count: infinite;
+  opacity: .8;
+}
+
+/* line 232, ../../app/styles/main.scss */
+#outerRing {
+  position: fixed;
+  z-index: 998;
+  right: 18px;
+  bottom: 18px;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #2e74b5;
+  border-radius: 18px;
+  opacity: .7;
+  box-shadow: 0px 0px 30px 0px #2e74b5;
+}
+
 /*# sourceMappingURL=main.css.map */
