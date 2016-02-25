@@ -8935,7 +8935,26 @@ body {
   width: 100%;
 }
 
-/* line 214, ../../app/styles/main.scss */
+@keyframes pulsate {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+/* line 230, ../../app/styles/main.scss */
 #innerCircle {
   position: fixed;
   z-index: 999;
@@ -8952,7 +8971,7 @@ body {
   opacity: .8;
 }
 
-/* line 232, ../../app/styles/main.scss */
+/* line 248, ../../app/styles/main.scss */
 #outerRing {
   position: fixed;
   z-index: 998;

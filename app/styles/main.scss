@@ -210,6 +210,22 @@ body {
   width: 100%;
 }
 
+@keyframes pulsate {
+    0% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 0.7;
+    }
+}
+
+@keyframes fade {
+    0% {opacity: 0;}
+    100% {opacity:1;}
+}
 
 #innerCircle {
     position: fixed;
@@ -244,16 +260,4 @@ body {
     -webkit-box-shadow: 0px 0px 30px 0px rgba(46,116,181,1);
     -moz-box-shadow: 0px 0px 30px 0px rgba(46,116,181,1);
     box-shadow: 0px 0px 30px 0px rgba(46,116,181,1);
-}
-
-
-@-webkit-keyframes pulsate {
-    0% {opacity: .7;}
-    50% {opacity: .3;}
-    100% {opacity:.7;}
-}
-
-@-webkit-keyframes fade {
-    0% {opacity: 0;}
-    100% {opacity:1;}
 }
