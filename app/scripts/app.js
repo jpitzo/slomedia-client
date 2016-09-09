@@ -26,6 +26,9 @@ angular
         resolve: {
           'videos': function(videoResolver){
             return videoResolver;
+          },
+          'cities': function(cityResolver){
+            return cityResolver;
           }
         }
       })

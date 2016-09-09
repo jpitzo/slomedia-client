@@ -8,12 +8,15 @@
  * Controller of the slofilmsFeApp
  */
 angular.module('slofilmsFeApp')
-  .controller('MainCtrl', ['$scope','socket','mastersocket', '$http', 'videos', 'button', 'constants',
-                           function ($scope, socket, mastersocket, $http, media, button, constants) {
+  .controller('MainCtrl', ['$scope','socket','mastersocket', '$http', 'videos', 'cities', 'button', 'constants',
+                           'controlActions', 'controlEvents', 'mediaStore',
+                           function ($scope, socket, mastersocket, $http, media, cities, button, constants,
+                                     controlActions, controlEvents, mediaStore) {
     $scope.time = 0;
     var syncBusy = false;
     var videoIndex = 0;
     var audioIndex = 0;
+    var mediaService = mediaStore(media);
     $scope.oos = false;
 
     var playerSrcPrefix = constants.httpserver;
@@ -25,204 +28,86 @@ angular.module('slofilmsFeApp')
         // No vidz bruh bruh!
         return;
     }
-
-    setPlayerSrc(media[0]);
     
     button.ondown(function(){
-      if ($scope.oos === false) {
+      // Change audio on down
+      mediaService.next(true,false);
+      
+      // Old code!!
+      //if ($scope.oos === false) {
         // We're demuxing, so split audio and video
-        $scope.demux();
-      }
-      else{
+      //  $scope.demux();
+      //}
+      //else{
         // We're already demuxed, so change audio
-        $scope.randomizeAudio();
-        
-      }
+      //  mediaService.next(true,false); 
+      //}
     },
     function(){
-      $scope.$apply(function(){
-        if ($scope.oos === true) {
-          $scope.remux();
-        }
-        $scope.oos = false;
-        setUiOOS(false);
+      $http.get('http://sloserver.net:3000/media/')
+      .then(function(resp){
+        mediaService = mediaStore(resp.data);
+      });
+      
+      //TODO: clean up old double click remux code
+      //$scope.$apply(function(){
+      //  if ($scope.oos === true) {
+      //    $scope.remux();
+      //  }
+      //  $scope.oos = false;
+      //  setUiOOS(false);
+      //});
+    },
+    function(){
+      $http.get('http://sloserver.net:3000/media/miami/')
+      .then(function(resp){
+        mediaService = mediaStore(resp.data, 'miami/');
       });
     });
-
-    socket.on('turn', function(data){
-      //setPlayerTime(videoplayer.currentTime + data.delta);
-      
-      if (!syncBusy && Math.abs(data.delta) > 1) {
-        syncBusy = true;
-        if (data.delta < 0) {
-          $scope.next();  
+    
+    button.onturn(function(data){
+        if (data.delta > 1) {
+            mediaService.next(false,true);
         }
-        else{
-          $scope.previous();
+        else if (data.delta < -1) {
+            mediaService.previous(false,true);
         }
-        setTimeout(function(){
-          syncBusy = false;
-        }, 250);
-      }
-      
-    });
+    })
+    
+    // Not sure when this would run??
     mastersocket.on('keypress', function(data){
       socket.emit('sync');
-      videoIndex = 0;
-      audioIndex = 0;
+      mediaService.setVideoIndex(0);
+      mediaService.setAudioIndex(0);
       $scope.$apply(function(){
         $scope.oos = false;
         setUiOOS(false);
       });
-      reload(true);
+      mediaService.reloadAudio(true);
+      mediaService.reloadVideo(true);
       $('body').addClass('sync');
       setTimeout(function(){
         $('body').removeClass('sync');
       }, 7000);
     });
     
-    $scope.sync = function(){
-      // Don't send this for now
-      //socket.emit('sync');
-      videoIndex = 0;
-      audioIndex = 0;
-      console.log('here');
-      $scope.$apply(function(){
-        $scope.oos = false;
-        setUiOOS(false);
-      });
-      reload(true);
-    }
-    
     $scope.demux = function(){
+      // Should eventually be random audio
       $http.get(constants.httpserver + 'pulse/start/');
-      $scope.randomizeAudio();
+      mediaService.next();
       $scope.$apply(function(){
         $scope.oos = true;
         setUiOOS(true);
       });
     }
     
-    $scope.randomizeAudio = function(){
-      var audios = [];
-      var randomNumber;
-      
-      for (var i = 0; i < media.length; i++) {
-        if (i !== audioIndex && i !== videoIndex) {
-            audios.push(i);
-        }
-      }
-
-      randomNumber = Math.floor(Math.random() * ((audios.length-1) - 0 + 1)) + 0;
-      audioIndex = audios[randomNumber];
-      reloadAudio();
-    }
-    
+    //TODO: Fix me!!
     $scope.remux = function(){
       $http.get(constants.httpserver + 'pulse/stop/');
       audioIndex = videoIndex;
       reloadAudio();
     }
-    
-    $scope.next = function(){
-      videoIndex++;
-      if (videoIndex >= media.length) {
-        videoIndex = 0;
-      }
-      
-      if ($scope.oos === false) {
-        audioIndex++;
-        if (audioIndex >= media.length) {
-          audioIndex = 0;
-        }
-        reloadAudio();
-      }
-      
-      reloadVideo();
-    }
-    
-    $scope.previous = function(){
-      videoIndex--;
-      
-      if (videoIndex < 0) {
-        videoIndex = media.length -1;
-      }
-      
-      if ($scope.oos === false) {
-        audioIndex--;
-        if (audioIndex < 0) {
-          audioIndex = media.length -1;
-        }
-        reloadAudio();
-      }
-      
-      reloadVideo();
-    }
-    
-    function reload(sync) {
-      if (sync) {
-        $scope.time = 0;
-      }
-      else{
-        $scope.time = videoplayer.currentTime;
-      }
-      
-      setPlayerSrc(media[videoIndex]);
 
-      videoplayer.load();
-      audioplayer.load();
-
-      setPlayerTime($scope.time);
-
-      videoplayer.play();
-      audioplayer.play();
-    }
-    
-    function reloadAudio(sync) {
-      if (sync) {
-        $scope.time = 0;
-      }
-      else{
-        $scope.time = audioplayer.currentTime;
-      }
-      
-      audioplayer.src = playerSrcPrefix + media[audioIndex][1];
-
-      audioplayer.load();
-
-      setPlayerTime($scope.time);
-      audioplayer.currentTime = $scope.time
-
-      audioplayer.play();
-    }
-    
-    function reloadVideo(sync) {
-      if (sync) {
-        $scope.time = 0;
-      }
-      else{
-        $scope.time = videoplayer.currentTime;
-      }
-      
-      videoplayer.src = playerSrcPrefix + media[videoIndex][0];
-
-      videoplayer.load();
-
-      videoplayer.currentTime = $scope.time;
-
-      videoplayer.play();
-    }
-    
-    function setPlayerSrc(src){
-      videoplayer.src = playerSrcPrefix + src[0];
-      audioplayer.src = playerSrcPrefix + src[1];
-    }
-
-    function setPlayerTime(time){
-      videoplayer.currentTime = time;
-      audioplayer.currentTime = time;
-    }
-    
     function setUiOOS(oos) {
         if (oos === true) {
           $('.wrap').addClass('oos');
