@@ -23,10 +23,11 @@ angular.module('slofilmsFeApp')
     
     var videoplayer = document.getElementsByTagName('video')[0];
     var audioplayer = document.getElementsByTagName('audio')[0];
-
-    if(media.length < 1){
-        // No vidz bruh bruh!
-        return;
+    
+    // Hack for now: "Miami Mode"
+    var miamiModeKey = null
+    if (cities.length > 0) {
+        miamiModeKey = cities[0];
     }
     
     button.ondown(function(){
@@ -59,9 +60,9 @@ angular.module('slofilmsFeApp')
       //});
     },
     function(){
-      $http.get('http://sloserver.net:3000/media/miami/')
+      $http.get('http://sloserver.net:3000/media/' + miamiModeKey + '/')
       .then(function(resp){
-        mediaService = mediaStore(resp.data, 'miami/');
+        mediaService = mediaStore(resp.data, miamiModeKey + '/');
       });
     });
     
