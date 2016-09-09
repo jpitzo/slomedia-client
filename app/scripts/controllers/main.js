@@ -60,10 +60,12 @@ angular.module('slofilmsFeApp')
       //});
     },
     function(){
-      $http.get('http://sloserver.net:3000/media/' + miamiModeKey + '/')
-      .then(function(resp){
-        mediaService = mediaStore(resp.data, miamiModeKey + '/');
-      });
+      if (miamiModeKey !== null) {
+        $http.get('http://sloserver.net:3000/media/' + miamiModeKey + '/')
+        .then(function(resp){
+          mediaService = mediaStore(resp.data, miamiModeKey + '/');
+        });
+      }
     });
     
     button.onturn(function(data){
