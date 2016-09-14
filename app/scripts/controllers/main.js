@@ -45,10 +45,7 @@ angular.module('slofilmsFeApp')
       //}
     },
     function(){
-      $http.get('http://sloserver.net:3000/media/')
-      .then(function(resp){
-        mediaService = mediaStore(resp.data);
-      });
+      mediaService.syncAudioToVideo();
       
       //TODO: clean up old double click remux code
       //$scope.$apply(function(){
@@ -59,14 +56,20 @@ angular.module('slofilmsFeApp')
       //  setUiOOS(false);
       //});
     },
-    function(){
+    [function(){
       if (miamiModeKey !== null) {
         $http.get('http://sloserver.net:3000/media/' + miamiModeKey + '/')
         .then(function(resp){
           mediaService = mediaStore(resp.data, miamiModeKey + '/');
         });
       }
-    });
+    },
+    function(){
+        $http.get('http://sloserver.net:3000/media/')
+        .then(function(resp){
+            mediaService = mediaStore(resp.data);
+        });
+    }]);
     
     button.onturn(function(data){
         if (data.delta > 1) {

@@ -43,9 +43,15 @@ angular.module('slofilmsFeApp')
             previous: previous,
             reloadAudio: reloadAudio,
             reloadVideo: reloadVideo,
+            syncAudioToVideo: syncAudioToVideo,
             setVideoIndex: function(i){ videoIndex = i },
             setAudioIndex: function(i){ audioIndex = i },
             getMediaLenght: function(i){ media.length },
+        }
+        
+        function syncAudioToVideo(){
+            audioIndex = videoIndex;
+            reloadAudio();
         }
         
         function next(audio, video){
